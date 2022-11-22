@@ -103,7 +103,7 @@ def checkParams():
             banner()
             print("""Usage: python3 saphire.py -u <url> -w <wordlist> -s <sleep> -c <custom headers>""")
             print("""""")
-            print("""Example: python3 saphire.py -u https://example.com -w /home/user/wordlist.txt -s 1 -c y""")
+            print("""Example: python3 saphire.py -u https://example.com -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}""")
             print("""""")
             print("""-h, --help: Show this help""")
             print("""-u, --url: Target URL""")
