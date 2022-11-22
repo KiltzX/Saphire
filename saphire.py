@@ -2,7 +2,7 @@ import os
 import requests;
 import time;
 import json;
-
+import sys;
 
 def headers_choose(old_headers={'origin_request': 'Saphire 1.0'}):
     print("""[+] Enter the header name: """)
@@ -37,22 +37,26 @@ def banner():
         Created by: @Kiltzx
     """)
 
-def main():
-    banner()
-    print("""
+def main(url='', wordlist='', sleep='', custom_headers='', show_banner=True):
+    print(""" 
+    """)
+    if show_banner:
+        banner()
+    if url == '':
+        print("""[+] Enter the target URL: """)
+        url = input("saphire > ")
+    if wordlist == '':
+        print("""[+] Enter the wordlist full path: """)
+        wordlist = input("saphire > ")
+    if sleep == '':
+        print("""[+] Enter the sleep time between requests: """)
+        sleep = input("saphire > ")
+    if custom_headers == '':
+        print("""[+] Use custom headers ? (y/N): """)
+        headers_choose = input("saphire > ")
+        if headers_choose == "y" or headers_choose == "Y":
+            custom_headers = headers_choose()
 
-[+] Enter the URL of the target: """)
-    url = input("saphire > ")
-    print("""[+] Enter the wordlist full path: """)
-    wordlist = input("saphire > ")
-    print("""[+] Enter sleep time request(in seconds): """)
-    sleep = input("saphire > ")
-
-    print("""[+] Wanna use custom headers? (y/N) """)
-    use_headers = input("saphire > ")
-    headers_final = ''
-    if use_headers == "y" or use_headers == "Y":
-        headers_final = headers_choose()
     try:
         url = url.replace("https://", "")
         url = url.replace("http://", "")
@@ -66,6 +70,10 @@ def main():
         isvalidFile = os.path.isfile(wordlist)
         if isvalidFile == True:
             print("[+] Wordlist found!")
+            print("[+] URL: " + url)
+            print("[+] Wordlist: " + wordlist)
+            print("[+] Sleep time: " + sleep)
+            print("[+] Custom headers: " + str(custom_headers))
             print("[+] Starting the scan...")
             with open(wordlist) as f:
                 for line in f:
@@ -73,7 +81,7 @@ def main():
                     endpoint = url + line
                     time.sleep(int(sleep))
                     print("[+] Trying: " + endpoint)
-                    r = requests.get(endpoint, headers=headers_final)
+                    r = requests.get(endpoint, headers=custom_headers)
                     if r.status_code == 200:
                         print("Found: " + endpoint)
                     else:
@@ -81,4 +89,38 @@ def main():
     except Exception as e:
         print("[-] Error: Check your wordlist path")
         print(e)
-main()
+
+def checkParams():
+    url= ''
+    wordlist = ''
+    sleep = ''
+    custom_headers = ''
+    if len(sys.argv) <= 1:
+        main()
+        return
+    for i in range(1, len(sys.argv)):
+        if sys.argv[i] == "-h" or sys.argv[i] == "--help":
+            banner()
+            print("""Usage: python3 saphire.py -u <url> -w <wordlist> -s <sleep> -c <custom headers>""")
+            print("""""")
+            print("""Example: python3 saphire.py -u https://example.com -w /home/user/wordlist.txt -s 1 -c y""")
+            print("""""")
+            print("""-h, --help: Show this help""")
+            print("""-u, --url: Target URL""")
+            print("""-w, --wordlist: Wordlist full path""")
+            print("""-s, --sleep: Sleep time between requests""")
+            print("""-c, --custom: Use custom headers""")
+            sys.exit()
+        else:
+            if sys.argv[i] == "-u" or sys.argv[i] == "--url":
+                url = sys.argv[i+1]
+            if sys.argv[i] == "-w" or sys.argv[i] == "--wordlist":
+                wordlist = sys.argv[i+1]
+            if sys.argv[i] == "-s" or sys.argv[i] == "--sleep":
+                sleep = sys.argv[i+1]
+            if sys.argv[i] == "-c" or sys.argv[i] == "--custom":
+                custom_headers = sys.argv[i+1]
+    main(url, wordlist, sleep, custom_headers, True)
+
+
+checkParams()
