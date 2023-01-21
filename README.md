@@ -13,10 +13,11 @@
         -- API - ENDPOINT FINDER --
         Version: 1.0
         Created by: @Kiltzx
+        Contribuitor: @jeanrafaellourenco
     
 Usage: python3 saphire.py -u <url> -w <wordlist> -s <sleep> -c <custom headers>
 
-Example: python3 saphire.py -u https://example.com -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}
+Example: python3 saphire.py -u https://example.com -m GET -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}
 
 -h, --help: Show this help
 -u, --url: Target URL
