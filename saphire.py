@@ -35,6 +35,7 @@ def banner():
         -- API - ENDPOINT FINDER --
         Version: 1.0
         Created by: @Kiltzx
+        Contribuitor: @jeanrafaellourenco
     """)
 
 def main(url='', wordlist='',method='' , sleep='', custom_headers='', show_banner=True):
