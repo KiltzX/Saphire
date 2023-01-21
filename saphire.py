@@ -120,7 +120,7 @@ def checkParams():
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == "-h" or sys.argv[i] == "--help":
             banner()
-            print("""Usage: python3 saphire.py -u <url> -w <wordlist> -s <sleep> -c <custom headers>""")
+            print("""Usage: python3 saphire.py -u <url> -m <METHOD> -w <wordlist> -s <sleep> -c <custom headers>""")
             print("""""")
             print("""Example: python3 saphire.py -u https://example.com -m GET -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}""")
             print("""""")
