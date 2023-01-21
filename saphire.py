@@ -37,7 +37,7 @@ def banner():
         Created by: @Kiltzx
     """)
 
-def main(url='', wordlist='', sleep='', custom_headers='', show_banner=True):
+def main(url='', wordlist='',method='' , sleep='', custom_headers='', show_banner=True):
     print(""" 
     """)
     if show_banner:
@@ -48,6 +48,9 @@ def main(url='', wordlist='', sleep='', custom_headers='', show_banner=True):
     if wordlist == '':
         print("""[+] Enter the wordlist full path: """)
         wordlist = input("saphire > ")
+    if method == '':
+        print("""[+] Enter the HTTP method(GET,POST): """)
+        method = input("saphire > ")
     if sleep == '':
         print("""[+] Enter the sleep time between requests: """)
         sleep = input("saphire > ")
@@ -61,16 +64,22 @@ def main(url='', wordlist='', sleep='', custom_headers='', show_banner=True):
         url = url.replace("https://", "")
         url = url.replace("http://", "")
         url = url.split("/")
+        print("""[+] Use SSL ? (S/n): """)
+        ssl = input("saphire > ")
         if url[(url.__len__() - 1)] != "":
             url = '/'.join(url)
             url = url + "/"
         else:
             url = '/'.join(url)
-        url = "https://" + url
+        if(ssl == "S" or ssl == "s"):
+            url = "https://" + url
+        else:
+            url = "http://" + url
         isvalidFile = os.path.isfile(wordlist)
         if isvalidFile == True:
             print("[+] Wordlist found!")
             print("[+] URL: " + url)
+            print("[+] Method: " + method)
             print("[+] Wordlist: " + wordlist)
             print("[+] Sleep time: " + sleep)
             print("[+] Custom headers: " + str(custom_headers))
@@ -81,17 +90,26 @@ def main(url='', wordlist='', sleep='', custom_headers='', show_banner=True):
                     endpoint = url + line
                     time.sleep(int(sleep))
                     print("[+] Trying: " + endpoint)
-                    r = requests.get(endpoint, headers=custom_headers)
-                    if r.status_code == 200:
-                        print("Found: " + endpoint)
-                    else:
-                        pass
+                    if method == "GET":
+
+                        r = requests.get(endpoint, headers=custom_headers)
+                        if r.status_code == 200:
+                            print("Found: " + endpoint)
+                        else:
+                            pass
+                    elif method == "POST":
+                        r = requests.post(endpoint,{} , headers=custom_headers)
+                        if r.status_code == 200:
+                            print("Found: " + endpoint)
+                        else:
+                            pass
     except Exception as e:
         print("[-] Error: Check your wordlist path")
         print(e)
 
 def checkParams():
     url= ''
+    method= ''
     wordlist = ''
     sleep = ''
     custom_headers = ''
@@ -103,10 +121,11 @@ def checkParams():
             banner()
             print("""Usage: python3 saphire.py -u <url> -w <wordlist> -s <sleep> -c <custom headers>""")
             print("""""")
-            print("""Example: python3 saphire.py -u https://example.com -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}""")
+            print("""Example: python3 saphire.py -u https://example.com -m GET -w /home/user/wordlist.txt -s 1 -c {x-access-token:XXXXXXXXX}""")
             print("""""")
             print("""-h, --help: Show this help""")
             print("""-u, --url: Target URL""")
+            print("""-m, --method: HTTP method""")
             print("""-w, --wordlist: Wordlist full path""")
             print("""-s, --sleep: Sleep time between requests""")
             print("""-c, --custom: Use custom headers""")
@@ -114,13 +133,15 @@ def checkParams():
         else:
             if sys.argv[i] == "-u" or sys.argv[i] == "--url":
                 url = sys.argv[i+1]
+            if sys.argv[i] == "-m" or sys.argv[i] == "--method":
+                method = sys.argv[i+1]
             if sys.argv[i] == "-w" or sys.argv[i] == "--wordlist":
                 wordlist = sys.argv[i+1]
             if sys.argv[i] == "-s" or sys.argv[i] == "--sleep":
                 sleep = sys.argv[i+1]
             if sys.argv[i] == "-c" or sys.argv[i] == "--custom":
                 custom_headers = sys.argv[i+1]
-    main(url, wordlist, sleep, custom_headers, True)
+    main(url, wordlist,method, sleep, custom_headers, True)
 
 
 checkParams()
